@@ -17,6 +17,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { DatePipe } from '@angular/common';
 import { LoginComponent } from './pages/login/login.component';
 import { ChatroomComponent } from './pages/chatroom/chatroom.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ChatroomComponent } from './pages/chatroom/chatroom.component';
     MatProgressSpinnerModule,
     MatSortModule,
     MatSnackBarModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatButtonModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
