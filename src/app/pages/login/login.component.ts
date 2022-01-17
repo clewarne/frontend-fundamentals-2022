@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   }
 
   onFormSubmit(form: any) {
-    this.router.navigate([`chatroom/:${form.nickname}`]);
+    this.router.navigate([`chatroom/${form.nickname}`]);
   }
 
 }
