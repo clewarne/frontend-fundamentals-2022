@@ -77,12 +77,9 @@ export class ChatroomComponent implements OnInit {
     public datepipe: DatePipe,
     private ref: ChangeDetectorRef,
     private firebaseService: FirebaseService) {
-    this.nickname = this.route.snapshot.params['nickname'];
-    console.log(this.nickname);
-
+      
     this.route.params.subscribe(el => {
       this.nickname = el['nickname'];
-      console.log(this.nickname);
     })
 
     this.chatForm = this.formBuilder.group({
