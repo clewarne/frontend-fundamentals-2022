@@ -79,8 +79,7 @@ export class ChatroomComponent implements OnInit {
 
   }
 
-  onFormSubmit(form: Chat) {
-    const chat = form;
+  onFormSubmit(chat: Chat) {
     chat.nickname = this.nickname;
     chat.date = new Date();
     chat.type = 'message';
