@@ -11,18 +11,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-export const snapshotToArray = (snapshot: any) => {
-  const returnArr: any[] = [];
-
-  snapshot.forEach((childSnapshot: any) => {
-    const item = childSnapshot.val();
-    item.key = childSnapshot.key;
-    returnArr.push(item);
-  });
-
-  return returnArr;
-};
-
 @Component({
   selector: 'app-chatroom',
   templateUrl: './chatroom.component.html',
@@ -78,7 +66,10 @@ export class ChatroomComponent implements OnInit {
     private formBuilder: FormBuilder,
     public datepipe: DatePipe,
     private ref: ChangeDetectorRef) {
-    this.nickname = this.route.snapshot.params['nickname'];
+      
+    this.route.params.subscribe(params => {
+      this.nickname = params['nickname'];
+    });
 
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
