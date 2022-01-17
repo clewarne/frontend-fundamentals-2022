@@ -86,7 +86,7 @@ export class ChatroomComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   onFormSubmit(form: any) {
@@ -102,7 +102,7 @@ export class ChatroomComponent implements OnInit {
   }
 
   exitChat() {
-
+    this.router.navigate(['login']);
   }
 
 }
