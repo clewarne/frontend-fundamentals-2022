@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,7 +32,7 @@ export class ChatroomComponent implements OnInit {
   @ViewChild('chatcontent') chatcontent!: ElementRef;
   scrolltop: number = 0;
 
-  chatForm!: FormGroup;
+  chatForm: FormGroup;
   nickname = '';
   message = '';
   users: Array<{ nickname: string }> = [{ nickname: 'one' }, { nickname: 'two' }, { nickname: 'three' }];
@@ -76,26 +76,29 @@ export class ChatroomComponent implements OnInit {
   constructor(private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    public datepipe: DatePipe) {
+    public datepipe: DatePipe,
+    private ref: ChangeDetectorRef) {
     this.nickname = this.route.snapshot.params['nickname'];
-  }
 
-  ngOnInit(): void {
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
+  }
+
+  ngOnInit(): void {
+    
   }
 
   onFormSubmit(form: any) {
     const chat = form;
     chat.nickname = this.nickname;
-    chat.date = this.datepipe.transform(new Date(), 'dd/MM/yyyy HH:mm:ss');
+    chat.date = new Date();
     chat.type = 'message';
-    // const newMessage = firebase.database().ref('chats/').push();
-    // newMessage.set(chat);
+    this.chats.push(chat);
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
+    this.ref.detectChanges();
   }
 
   exitChat() {
