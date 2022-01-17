@@ -80,7 +80,7 @@ export class ChatroomComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.nickname = params['nickname'];
-    })
+    });
 
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]

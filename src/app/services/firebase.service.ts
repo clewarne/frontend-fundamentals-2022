@@ -36,22 +36,10 @@ export class FirebaseService {
     });
   }
 
-  public async logout(nickname: string){
+  public async logout(nickname: string) {
     this.db = getDatabase(this.app);
     await set(ref(this.db, 'users/' + nickname), {
       online: false
     });
   }
-
-  // this.ref.orderByChild('nickname').equalTo(login.nickname).once('value', snapshot => {
-  //   if (snapshot.exists()) {
-  //     localStorage.setItem('nickname', login.nickname);
-  //     this.router.navigate(['/roomlist']);
-  //   } else {
-  //     const newUser = firebase.database().ref('users/').push();
-  //     newUser.set(login);
-  //     localStorage.setItem('nickname', login.nickname);
-  //     this.router.navigate(['/roomlist']);
-  //   }
-  // });
 }
