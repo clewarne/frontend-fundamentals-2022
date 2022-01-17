@@ -27,8 +27,7 @@ export class ChatroomComponent implements OnInit, OnDestroy {
   chatForm: FormGroup;
   nickname = '';
   message = '';
-
-  users$ = this.firebaseService.onlineUsers$;
+  
   chats$ = this.firebaseService.chats$;
 
   matcher = new MyErrorStateMatcher();

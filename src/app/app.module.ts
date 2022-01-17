@@ -19,12 +19,14 @@ import { LoginComponent } from './pages/login/login.component';
 import { ChatroomComponent } from './pages/chatroom/chatroom.component';
 import { MatButtonModule } from '@angular/material/button';
 import { FirebaseService } from './services/firebase.service';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ChatroomComponent
+    ChatroomComponent,
+    UserListComponent
   ],
   imports: [
     BrowserModule,
