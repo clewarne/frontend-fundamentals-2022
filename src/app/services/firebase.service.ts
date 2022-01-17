@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { Database, getDatabase, ref, set, onValue } from "firebase/database";
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Chat } from '../models/chat';
 import { User } from '../models/user';
 
 // Your web app's Firebase configuration
@@ -26,6 +27,7 @@ export class FirebaseService {
   public db: Database;
 
   public onlineUsers$ = new BehaviorSubject<User[]>([]);
+  public chats$ = new BehaviorSubject<Chat[]>([]);
 
   constructor() {
     // Initialize Firebase
@@ -33,6 +35,7 @@ export class FirebaseService {
     this.db = getDatabase(this.app);
 
     this.getOnlineUsers();
+    this.getChats();
   }
 
   public async login(nickname: string) {
@@ -49,7 +52,11 @@ export class FirebaseService {
     });
   }
 
-  public getOnlineUsers() {
+  public async sendChat(chat: Chat){
+    await set(ref(this.db, 'chats/' + chat.date.getTime()), chat);
+  }
+
+  private getOnlineUsers() {
     // Listen to changes in users db and get online users
     const usersDbRef = ref(this.db, 'users/');
     onValue(usersDbRef, (snapshot) => {
@@ -58,6 +65,17 @@ export class FirebaseService {
       const onlineUsers = Object.values<User>(data).filter(user => user.online);
       // Post online users on Subject
       this.onlineUsers$.next(onlineUsers);
+    });
+  }
+
+  private getChats() {
+    const chatsDbRef = ref(this.db, 'chats/');
+    onValue(chatsDbRef, (snapshot) => {
+      const data = snapshot.val();
+      // Convert data to array
+      const chats = Object.values<Chat>(data);
+      // Post chats Subject
+      this.chats$.next(chats);
     });
   }
 

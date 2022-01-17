@@ -29,37 +29,8 @@ export class ChatroomComponent implements OnInit, OnDestroy {
   message = '';
 
   users$ = this.firebaseService.onlineUsers$;
+  chats$ = this.firebaseService.chats$;
 
-  chats: Array<Chat> = [{
-    nickname: 'one',
-    date: new Date(),
-    type: 'message',
-    message: 'testing 123'
-  },
-  {
-    nickname: 'one',
-    date: new Date(),
-    type: 'message',
-    message: 'testing 123'
-  },
-  {
-    nickname: 'one',
-    date: new Date(),
-    type: 'message',
-    message: 'testing 123'
-  },
-  {
-    nickname: 'two',
-    date: new Date(),
-    type: 'message',
-    message: 'you can stop that now'
-  },
-  {
-    nickname: 'asdf',
-    date: new Date(),
-    type: 'message',
-    message: 'meh'
-  }];
   matcher = new MyErrorStateMatcher();
 
   private subscriptions = new Subscription();
@@ -84,11 +55,11 @@ export class ChatroomComponent implements OnInit, OnDestroy {
 
   }
 
-  onFormSubmit(chat: Chat) {
+  async onFormSubmit(chat: Chat) {
     chat.nickname = this.nickname;
     chat.date = new Date();
     chat.type = 'message';
-    this.chats.push(chat);
+    await this.firebaseService.sendChat(chat);
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
