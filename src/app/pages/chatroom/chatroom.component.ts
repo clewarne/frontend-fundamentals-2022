@@ -3,6 +3,9 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Chat } from 'src/app/models/chat';
+import { User } from 'src/app/models/user';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -35,40 +38,35 @@ export class ChatroomComponent implements OnInit {
   chatForm: FormGroup;
   nickname = '';
   message = '';
-  users: Array<{ nickname: string }> = [{ nickname: 'one' }, { nickname: 'two' }, { nickname: 'three' }];
-  chats: Array<{
-    nickname: string,
-    date: Date,
-    type: string,
-    message: string,
-  }> = [{
+  users: Array<User> = [{ nickname: 'one' }, { nickname: 'two' }, { nickname: 'three' }];
+  chats: Array<Chat> = [{
     nickname: 'one',
     date: new Date(),
-    type: 'test',
+    type: 'message',
     message: 'testing 123'
   },
   {
     nickname: 'one',
     date: new Date(),
-    type: 'test',
+    type: 'message',
     message: 'testing 123'
   },
   {
     nickname: 'one',
     date: new Date(),
-    type: 'test',
+    type: 'message',
     message: 'testing 123'
   },
   {
     nickname: 'two',
     date: new Date(),
-    type: 'test',
+    type: 'message',
     message: 'you can stop that now'
   },
   {
     nickname: 'asdf',
     date: new Date(),
-    type: 'test',
+    type: 'message',
     message: 'meh'
   }];
   matcher = new MyErrorStateMatcher();
@@ -77,8 +75,15 @@ export class ChatroomComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public datepipe: DatePipe,
-    private ref: ChangeDetectorRef) {
+    private ref: ChangeDetectorRef,
+    private firebaseService: FirebaseService) {
     this.nickname = this.route.snapshot.params['nickname'];
+    console.log(this.nickname);
+
+    this.route.params.subscribe(el => {
+      this.nickname = el['nickname'];
+      console.log(this.nickname);
+    })
 
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
@@ -89,7 +94,7 @@ export class ChatroomComponent implements OnInit {
 
   }
 
-  onFormSubmit(form: any) {
+  onFormSubmit(form: Chat) {
     const chat = form;
     chat.nickname = this.nickname;
     chat.date = new Date();
@@ -101,7 +106,8 @@ export class ChatroomComponent implements OnInit {
     this.ref.detectChanges();
   }
 
-  exitChat() {
+  async exitChat() {
+    await this.firebaseService.logout(this.nickname);
     this.router.navigate(['login']);
   }
 

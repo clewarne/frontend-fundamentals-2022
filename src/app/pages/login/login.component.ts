@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Valida
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { } from 'firebase/database'
+import { User } from 'src/app/models/user';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -21,7 +23,7 @@ export class LoginComponent implements OnInit {
   nickname = '';
   matcher = new MyErrorStateMatcher();
 
-  constructor(private router: Router, private formBuilder: FormBuilder) {
+  constructor(private router: Router, private formBuilder: FormBuilder, private firebaseService: FirebaseService) {
     this.loginForm = this.formBuilder.group({
       'nickname': [null, Validators.required]
     });
@@ -30,8 +32,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onFormSubmit(form: any) {
-    this.router.navigate([`chatroom/:${form.nickname}`]);
+  async onFormSubmit(user: User) {
+    await this.firebaseService.login(user.nickname);
+    this.router.navigate([`chatroom/${user.nickname}`]);
   }
 
 }
