@@ -1,8 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Chat } from 'src/app/models/chat';
 import { User } from 'src/app/models/user';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -19,14 +20,16 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './chatroom.component.html',
   styleUrls: ['./chatroom.component.less']
 })
-export class ChatroomComponent implements OnInit {
+export class ChatroomComponent implements OnInit, OnDestroy {
   @ViewChild('chatcontent') chatcontent!: ElementRef;
   scrolltop: number = 0;
 
   chatForm: FormGroup;
   nickname = '';
   message = '';
-  users: Array<User> = [{ nickname: 'one' }, { nickname: 'two' }, { nickname: 'three' }];
+
+  users$ = this.firebaseService.onlineUsers$;
+
   chats: Array<Chat> = [{
     nickname: 'one',
     date: new Date(),
@@ -59,13 +62,14 @@ export class ChatroomComponent implements OnInit {
   }];
   matcher = new MyErrorStateMatcher();
 
+  private subscriptions = new Subscription();
+
   constructor(private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public datepipe: DatePipe,
     private ref: ChangeDetectorRef,
     private firebaseService: FirebaseService) {
-
     this.route.params.subscribe(params => {
       this.nickname = params['nickname'];
     });
@@ -73,6 +77,7 @@ export class ChatroomComponent implements OnInit {
     this.chatForm = this.formBuilder.group({
       'message': [null, Validators.required]
     });
+
   }
 
   ngOnInit(): void {
@@ -95,4 +100,7 @@ export class ChatroomComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 }
