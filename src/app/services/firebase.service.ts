@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Database, getDatabase, ref, set } from "firebase/database";
+import { Database, getDatabase, ref, set, onValue } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -30,16 +30,16 @@ export class FirebaseService {
   }
 
   public async login(nickname: string) {
-    this.db = getDatabase(this.app);
     await set(ref(this.db, 'users/' + nickname), {
       online: true
     });
   }
 
   public async logout(nickname: string) {
-    this.db = getDatabase(this.app);
     await set(ref(this.db, 'users/' + nickname), {
       online: false
     });
   }
+
+
 }
