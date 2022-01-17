@@ -18,6 +18,7 @@ import { DatePipe } from '@angular/common';
 import { LoginComponent } from './pages/login/login.component';
 import { ChatroomComponent } from './pages/chatroom/chatroom.component';
 import { MatButtonModule } from '@angular/material/button';
+import { FirebaseService } from './services/firebase.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSidenavModule,
     MatButtonModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, FirebaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
