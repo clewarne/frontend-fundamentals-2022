@@ -39,6 +39,7 @@ export class FirebaseService {
   }
 
   public async login(nickname: string) {
+    localStorage.setItem('chatterbox', nickname);
     await set(ref(this.db, 'users/' + nickname), {
       nickname,
       online: true
@@ -46,13 +47,14 @@ export class FirebaseService {
   }
 
   public async logout(nickname: string) {
+    localStorage.removeItem('chatterbox');
     await set(ref(this.db, 'users/' + nickname), {
       nickname,
       online: false
     });
   }
 
-  public async sendChat(chat: Chat){
+  public async sendChat(chat: Chat) {
     await set(ref(this.db, 'chats/' + chat.date.getTime()), chat);
   }
 

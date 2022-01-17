@@ -29,12 +29,20 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    let nickname = localStorage.getItem('chatterbox');
+    if(nickname){
+      await this.login(nickname);
+    }
   }
 
   async onFormSubmit(user: User) {
-    await this.firebaseService.login(user.nickname);
-    this.router.navigate([`chatroom/${user.nickname}`]);
+    await this.login(user.nickname);
+  }
+
+  private async login(nickname: string){
+    await this.firebaseService.login(nickname);
+    this.router.navigate([`chatroom/${nickname}`]);
   }
 
 }
